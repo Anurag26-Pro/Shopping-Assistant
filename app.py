@@ -142,7 +142,7 @@ def main():
     </h2>
     """, unsafe_allow_html=True)
 
-    query = st.text_input("Enter a product name:", placeholder="e.g., Dell XPS 13 Laptop", key="product_query")
+    query = st.text_input("Enter a product name:", placeholder="e.g., Asus ZenBook 14", key="product_query")
 
     if query:
         with st.spinner("Searching for products..."):
