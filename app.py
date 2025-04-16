@@ -111,7 +111,7 @@ def main():
 
     # Logo and Sidebar Content
     try:
-        logo_base64 = get_base64_logo("/workspaces/Shopping-Assistant/Static/Hoonartek-V25-White-Color.png")
+        logo_base64 = get_base64_logo("Static/Hoonartek-V25-White-Color.png")
         st.sidebar.markdown(
             f"""
             <div style="text-align: center;">
