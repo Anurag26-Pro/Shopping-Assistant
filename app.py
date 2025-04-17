@@ -6,7 +6,7 @@ import base64
 
 # API Keys
 GEMINI_API_KEY = "AIzaSyAVwoZmGiYvSj8sbD2wOAvjI3f1crjT9hU"
-SERPAPI_API_KEY = "4237ce6a76722c312bd2f1f8b26b71f9ca86bc080a82d3e282b0df4eda4caa62"
+SERPAPI_API_KEY = "956b82834e59dadc930c200ee2023e745df3cb57d3c25088283029ead075d0fe"
 
 # Currency conversion (USD to INR)
 USD_TO_INR = 83.5
