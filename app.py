@@ -47,7 +47,7 @@ def shopping_assistant(query):
     if not shopping_results:
         return f"No shopping results found for '{query}'. Please try a more specific product."
 
-    result_summary = f"Found {len(shopping_results)} shopping results for '{query}'.\n\n"
+    result_summary = f"Found Top shopping results for '{query}'.\n\n"
     result_summary += "### 🔝 Top 3 Results:\n\n"
 
     for i, item in enumerate(shopping_results[:3]):
@@ -125,7 +125,7 @@ def main():
 
     st.sidebar.title("Usecase Details")
     st.sidebar.markdown("This shopping assistant provides friendly answers and personalized support. This Model is perfect for enhancing websites or customer service systems.")
-    st.sidebar.header("Model Used:")
+    st.sidebar.header("Model Name:")
     st.sidebar.markdown("Google SerpApi and Gemini 2.0 Flash")
 
     # Main UI
@@ -142,7 +142,7 @@ def main():
     </h2>
     """, unsafe_allow_html=True)
 
-    query = st.text_input("Enter a product name:", placeholder="e.g., Asus ZenBook 14", key="product_query")
+    query = st.text_input("Enter a product details:", placeholder="e.g., Asus ZenBook 14", key="product_query")
 
     if query:
         with st.spinner("Searching for products..."):
