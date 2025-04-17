@@ -1,36 +1,27 @@
-import requests
 import streamlit as st
 from PIL import Image
 from io import BytesIO
 import base64
+from agno.agent import Agent
+from agno.models.groq import Groq
+import re
 
-# API Keys
-GEMINI_API_KEY = "AIzaSyAVwoZmGiYvSj8sbD2wOAvjI3f1crjT9hU"
-SERPAPI_API_KEY = "956b82834e59dadc930c200ee2023e745df3cb57d3c25088283029ead075d0fe"
+# 🌟 Set Up the AI Agent with Groq
+model = Groq("llama3-70b-8192", api_key="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")
+agent = Agent(model=model)
 
-# Currency conversion (USD to INR)
-USD_TO_INR = 85.5
+# 🛒 Shopping Assistant Function
 
-
-# 🛍️ Fetch Shopping Results
-def get_shopping_results(query):
-    params = {
-        "q": query,
-        "api_key": SERPAPI_API_KEY,
-        "engine": "google",
-        "google_domain": "google.com",
-        "gl": "us",
-        "hl": "en"
-    }
-    response = requests.get("https://serpapi.com/search", params=params)
-    
-    if response.status_code == 200:
-        results = response.json()
-        return results.get("shopping_results", [])
-    else:
-        st.error("Failed to fetch results from SerpAPI. Please try again later.")
-        return []
-
+def shopping_assistant(query):
+    prompt = f"""
+    You are a helpful and friendly shopping assistant.
+    Help the user find the best product matching this query: "{query}"
+    Return a markdown-formatted recommendation.
+    Avoid using phrases like 'Top Pick:' or 'Buy Now:'.
+    """
+    response = agent.run(prompt)
+    cleaned_response = re.sub(r'(Top Pick:|Buy Now:.*?)\n?', '', response.content, flags=re.IGNORECASE)
+    return cleaned_response.strip() if response else "Sorry, I couldn't find any results. Please try again."
 
 # 🎨 Logo to Base64 for Sidebar
 def get_base64_logo(img_path):
@@ -39,40 +30,6 @@ def get_base64_logo(img_path):
     img.save(buffered, format="PNG")
     return base64.b64encode(buffered.getvalue()).decode()
 
-
-# 💡 Shopping Assistant Logic
-def shopping_assistant(query):
-    shopping_results = get_shopping_results(query)
-
-    if not shopping_results:
-        return f"No shopping results found for '{query}'. Please try a more specific product."
-
-    result_summary = f"Found Top shopping results for '{query}'.\n\n"
-    result_summary += "### 🔝 Top 3 Results:\n\n"
-
-    for i, item in enumerate(shopping_results[:3]):
-        title = item.get("title", "N/A")
-        link = item.get("link", "#")
-        source = item.get("source", "N/A")
-        price = item.get("price", "$0").replace("$", "")
-        image_url = item.get("thumbnail", "")
-
-        try:
-            price_inr = round(float(price.replace(",", "")) * USD_TO_INR, 2)
-            price_display = f"₹{price_inr:,.2f}"
-        except:
-            price_display = "Price not available"
-
-        result_summary += f"**{i+1}. {title}**\n"
-        result_summary += f"- 💰 **Price**: {price_display}\n"
-        result_summary += f"- 🌐 **Source**: {source}\n"
-        result_summary += f"- 🔗 [View Product]({link})\n"
-        result_summary += f"- 🖼️ ![Product Image]({image_url})\n\n"
-
-    return result_summary
-
-
-# 🌐 Streamlit App UI
 def main():
     st.set_page_config(page_title="Smart Shopping Assistant", layout="wide")
 
@@ -126,7 +83,7 @@ def main():
     st.sidebar.title("Use Case Details")
     st.sidebar.markdown("This shopping assistant provides friendly answers and personalized support. This Model is perfect for enhancing websites or customer service systems.")
     st.sidebar.header("Model Name:")
-    st.sidebar.markdown("Google SerpApi and Gemini 2.0 Flash")
+    st.sidebar.markdown("Groq LLaMA3 70B")
 
     # Main UI
     st.markdown("""
@@ -134,7 +91,7 @@ def main():
         Smart Shopping Assistant
     </h1>
     """, unsafe_allow_html=True)
-    
+
     st.markdown("""
     <h2 style='font-size: 20px; color: #2f729b; margin-bottom: 20px; text-align: center'>
     Welcome to the Smart Shopping Assistant!  
@@ -147,8 +104,8 @@ def main():
     if query:
         with st.spinner("Searching for products..."):
             results = shopping_assistant(query)
+            st.markdown("### Product Results")
             st.markdown(results)
-
 
 # 🚀 Run App
 if __name__ == "__main__":
