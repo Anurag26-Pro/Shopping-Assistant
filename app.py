@@ -123,7 +123,7 @@ def main():
     except Exception as e:
         st.sidebar.warning("Logo not found or failed to load.")
 
-    st.sidebar.title("Usecase Details")
+    st.sidebar.title("Use Case Details")
     st.sidebar.markdown("This shopping assistant provides friendly answers and personalized support. This Model is perfect for enhancing websites or customer service systems.")
     st.sidebar.header("Model Name:")
     st.sidebar.markdown("Google SerpApi and Gemini 2.0 Flash")
